@@ -1,4 +1,4 @@
-### Explanation:
+# Explanation:
 
 ## Variables:
 - manager: Address of the manager who deploys the contract.
