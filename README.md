@@ -1,21 +1,40 @@
-The smart contract from the GitHub link may not "fail" in the sense of being non-functional, but it does exhibit severa potential vulnerabilities and areas for improvement. 
-https://github.com/Eriststark/check_vottun_smart_contract
-Errors
+### Explanation:
 
-- The contract does not provide a way to change the owner if needed.
+## Variables:
+- manager: Address of the manager who deploys the contract.
+- players: Array holding the addresses of all participants who have bought tickets.
+- winner: Address of the winner of the lottery draw.
+- ticketPrice: Price per lottery ticket in wei.
+- minimumPlayers: Minimum number of players required to conduct a draw.
+- randomSeed: Seed used for generating random numbers.
 
-- In the withdrawTips function, there is a potential reentrancy attack vector.
+## Constructor:
+Sets the manager as the contract creator (the address that deploys the contract).
 
-- Emitting events before executing state changes is not recommended due to the possibility of state changes failing, leading to inconsistent state with respect to events.
+## Functions:
+- buyTicket(): Allows users to buy a ticket by sending the correct amount of ether (ticketPrice). Adds the sender's address to the players array.
 
-- The contract should have a receive or fallback function to handle plain Ether transfers.
+- conductDraw(): Conducts the draw to determine the winner. It requires that there are enough players (minimumPlayers). Uses a simple random number generation method (keccak256 hash of block information and randomSeed) to select a winner and transfers the contract balance to the winner.
 
-Modifications
+- resetLottery(): Resets the lottery for the next round by clearing the players array and updating the randomSeed.
 
-- Implement a function to allow the owner to transfer ownership.
+## Modifiers:
 
-- Use a pattern like the Checks-Effects-Interactions pattern or a reentrancy guard.
+- restricted(): Restricts access to functions that should only be called by the manager.
 
-- Emit events after state changes to ensure they reflect the actual state.
+## View Functions:
 
-- Implement a receive function to handle direct Ether transfers.
+- getPlayers(): Retrieves the array of addresses of current players.
+- getContractBalance(): Retrieves the current balance (in wei) of the contract.
+
+## Usage:
+
+- Deploy the contract using an Ethereum development environment like Remix or Truffle, or you can deploy using Vottun APIs and and interact with it using the Vottun APIs.
+
+- Players can interact with the contract by calling buyTicket() to purchase tickets.
+    
+- The manager calls conductDraw() once enough players have purchased tickets.
+
+- After the draw, players can check if they won by examining the winner variable.
+
+- The manager can withdraw the contract balance using regular Ethereum wallet operations.
